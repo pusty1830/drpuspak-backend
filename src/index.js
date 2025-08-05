@@ -39,6 +39,7 @@ Sequlize.authenticate()
     console.log("Database connection  error", err);
   });
 // routes
+app.use("/api", require("./routes"));
 
 const port = process.env.PORT || 5000;
 
