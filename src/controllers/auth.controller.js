@@ -22,8 +22,8 @@ const {
 exports.signup = async (req, res) => {
   try {
     let body = req.body;
-    body.password = hashPassword(body.password.trim());
-    let result = await User.addUser(body);
+    body.password = await hashPassword(body.password.trim());
+    let result = await User.addData(body);
     result = getRawData(result);
     res
       .status(httpResponseCodes.CREATED)
@@ -39,9 +39,9 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
+    console.log(req.body);
     let result = await User.getOneUserByCond({
       email: req.body.email,
-      status: req.body.status,
     });
     result = getRawData(result);
     if (result) {
@@ -60,10 +60,9 @@ exports.signin = async (req, res) => {
       } else {
         let token = await generateSign(
           result.email,
-          result.firstName,
-          result.status,
           result.id,
-          result.roll
+          result.userName,
+          result.role
         );
         result.accessToken = token;
         res

@@ -3,6 +3,7 @@ const app = express();
 require("dotenv").config();
 const Sequlize = require("./config/db.config");
 const cors = require("cors");
+require("./utils/reminderCron");
 
 // middlewares
 app.use(cors());
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
 Sequlize.authenticate()
   .then(() => {
     console.log("Database Connected Successfully");
-    Sequlize.sync({ alert: true, force: false })
+    Sequlize.sync({ alter: true, force: false })
       .then(() => {
         console.log("Database Sync Successfully");
       })

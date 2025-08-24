@@ -7,8 +7,8 @@ const {
 } = require("../utils/messages");
 
 const checkEmail = (req, res, next) => {
-  const { email } = req.body;
-  User.getOneUserByCond({ email })
+  const { phoneNumber } = req.body;
+  User.getOneUserByCond({ phoneNumber })
     .then((data) => {
       if (data) {
         return res
