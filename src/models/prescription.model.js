@@ -30,6 +30,11 @@ const Prescription = config.define(
       type: Sequilize.STRING,
       allowNull: false,
     },
+
+    advices: {
+      type: Sequilize.JSON,
+      allowNull: true,
+    },
   },
   {
     tableName: "prescriptions",
