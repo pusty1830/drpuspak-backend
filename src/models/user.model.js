@@ -24,7 +24,7 @@ const User = config.define(
       defaultValue: "123456",
     },
     role: {
-      type: Sequilize.ENUM("User", "Doctor", "Admin"),
+      type: Sequilize.ENUM("User", "Doctor", "Admin","Receptionist"),
       allowNull: false,
       defaultValue: "User",
     },
