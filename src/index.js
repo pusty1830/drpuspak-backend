@@ -28,13 +28,13 @@ app.use((req, res, next) => {
 Sequlize.authenticate()
   .then(() => {
     console.log("Database Connected Successfully");
-    Sequlize.sync({ alter: true, force: false })
-      .then(() => {
-        console.log("Database Sync Successfully");
-      })
-      .catch((err) => {
-        console.log("Database sync error", err);
-      });
+    // Sequlize.sync({ alter: true, force: false })
+    //   .then(() => {
+    //     console.log("Database Sync Successfully");
+    //   })
+    //   .catch((err) => {
+    //     console.log("Database sync error", err);
+    //   });
   })
   .catch((err) => {
     console.log("Database connection  error", err);

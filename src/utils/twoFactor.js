@@ -1,20 +1,48 @@
-const axios = require("axios");
+const twilio = require("twilio");
 
-async function sendSMS(phoneNumber, message) {
+/**
+ * Send WhatsApp message using Twilio API
+ * @param {string} phoneNumber - Indian phone number (10 digits or with +91 prefix)
+ * @param {string} message - Message text to send
+ */
+async function sendWhatsApp(phoneNumber, message) {
   try {
-    const apiKey = process.env.TWO_FACTOR_API_KEY; // Keep in .env
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) {
+      throw new Error("Missing Twilio credentials in environment variables");
+    }
 
-    // Direct SMS API
-    await axios.get(
-      `https://2factor.in/API/V1/${apiKey}/SMS/${phoneNumber}/${encodeURIComponent(
-        message
-      )}`
+    const client = twilio(
+      process.env.TWILIO_ACCOUNT_SID,
+      process.env.TWILIO_AUTH_TOKEN
     );
 
-    console.log(`✅ SMS sent to ${phoneNumber}: ${message}`);
+    // Ensure number starts with +91
+    let formattedNumber = phoneNumber.toString();
+    if (!formattedNumber.startsWith("91")) {
+      formattedNumber = `91${formattedNumber}`;
+    }
+
+    const resp = await client.messages.create({
+      from: "whatsapp:+14155238886", // Twilio sandbox or your WhatsApp-enabled number
+      to: `whatsapp:+${formattedNumber}`,
+      body: message,
+    });
+
+    console.log(`✅ WhatsApp sent via Twilio to ${formattedNumber}:`, resp.sid);
+    return resp;
   } catch (error) {
-    console.error(`❌ Failed to send SMS to ${phoneNumber}: ${error}`);
+    console.error(
+      `❌ Failed to send WhatsApp via Twilio to ${phoneNumber}:`,
+      error.message
+    );
+    return null;
   }
 }
 
-module.exports = { sendSMS };
+module.exports = { sendWhatsApp };
+
+// Example usage
+// (async () => {
+//   await sendWhatsApp("9876543210", "Hello from Twilio 🚀");
+//   await sendWhatsApp("919876543210", "Tomorrow is your revisit reminder 🏥");
+// })();

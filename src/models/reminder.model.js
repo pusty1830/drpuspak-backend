@@ -34,6 +34,11 @@ const Reminder = config.define(
       type: Sequilize.ENUM("clinic", "kims"),
       allowNull: false,
     },
+    reason: {
+      type: Sequilize.ENUM("operation", "opd", "revisit"),
+      allowNull: false,
+      defaultValue: "revisit",
+    },
     nextVisit: {
       type: Sequilize.DATE,
       allowNull: false,

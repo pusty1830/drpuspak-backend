@@ -1,10 +1,10 @@
 const cron = require("node-cron");
 const Reminder = require("../models/reminder.model");
-const { sendSMS } = require("./twoFactor");
+const { sendWhatsApp } = require("./twoFactor");
 const { Op } = require("sequelize");
 
 // Runs daily at 7:00 AM
-cron.schedule("43 22 * * *", async () => {
+cron.schedule("08 19 * * *", async () => {
   console.log("⏰ Checking reminders for tomorrow...");
 
   const tomorrow = new Date();
@@ -25,8 +25,14 @@ cron.schedule("43 22 * * *", async () => {
 
     for (const reminder of reminders) {
       const visitDate = reminder.nextVisit.toISOString().split("T")[0];
-      const message = `Your Revisit is on ${visitDate} at ${reminder.nextVisitTime} from ${reminder.fromWhere}`;
-      await sendSMS(reminder.patientNumber, message);
+      let clinicName =
+        reminder.fromWhere === "clinic"
+          ? "Clinic Dr Puspak Samal (Orthspine Care)"
+          : "KIMS Hospital";
+
+      const message = `Your revisit is on ${visitDate} from ${clinicName}\n\n— Dr Puspak Samal | Orthopedics`;
+
+      await sendWhatsApp(reminder.patientNumber, message);
     }
   } catch (err) {
     console.error("❌ Error fetching reminders:", err.message);
